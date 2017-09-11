@@ -54,7 +54,8 @@ public class CommunicationProtocolImplementation implements ICommunicationProtoc
 		if ((packets & Communication.F_AskChallenge) == Communication.F_AskChallenge){ 
 			//Ici envoyer code secret
 		}
-		else if ((packets | Communication.F_AskChallenge | Communication.F_AcceptChallenge) == (Communication.F_AskChallenge | Communication.F_AcceptChallenge)){ 
+		else if ((packets | Communication.F_AskChallenge | Communication.F_AcceptChallenge) == 
+				(Communication.F_AskChallenge | Communication.F_AcceptChallenge)){ 
 			//Ici verif login + mdp
 		}
 		else if ((packets & Communication.F_IsLogged | Communication.F_SentMsg) == (Communication.F_IsLogged | Communication.F_SentMsg)){
