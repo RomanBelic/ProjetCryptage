@@ -10,9 +10,8 @@ public class Communication {
 	}
 	
 	public interface ICommunicationProtocol{
-		void communicate(IDispatcherService dispatcherService);
+		void communicate();
 		void sendMessage(Message message);
-		void closeCommunication();
 	}
 	
 	public static long F_SentMsg = 8;

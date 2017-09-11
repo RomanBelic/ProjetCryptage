@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class ConnectionManager {
 	
-	private static String cnString;
+	private static String cnString = null;
 	
 	private ConnectionManager(){
 		try(InputStream is = new FileInputStream("config.properties")) {

@@ -12,17 +12,17 @@ import threading.CommunicationThread;
 public class CommunicationProtocolImplementation implements ICommunicationProtocol {
 	
 	private final CommunicationThread commThread;
-	private ObjectInputStream ois;
+	private final IDispatcherService dispatcherService;
 	private ObjectOutputStream oos;
 	
-	public CommunicationProtocolImplementation(CommunicationThread commThread){
+	public CommunicationProtocolImplementation(CommunicationThread commThread, IDispatcherService dispatcherService){
 		this.commThread = commThread;
+		this.dispatcherService = dispatcherService;
 	}
 	
 	@Override
-	public void communicate(IDispatcherService dispatcherService) {
-		try {
-			ois = new ObjectInputStream(commThread.getSocket().getInputStream());
+	public void communicate() {
+		try(ObjectInputStream ois = new ObjectInputStream(commThread.getSocket().getInputStream())){
 			oos = new ObjectOutputStream(commThread.getSocket().getOutputStream());
 			Message msg;
 			while((msg = (Message) ois.readObject()) != null){
@@ -31,7 +31,11 @@ public class CommunicationProtocolImplementation implements ICommunicationProtoc
 		}catch(Exception e){
 			System.err.println(e.getMessage());
 		}finally {
-			closeCommunication();
+			try {
+				if (oos != null) oos.close();
+			}catch(Exception e){
+				System.err.println(e.getMessage());
+			}
 		}
 	}
 	
@@ -39,18 +43,7 @@ public class CommunicationProtocolImplementation implements ICommunicationProtoc
 	public void sendMessage(Message message) {
 		try {
 			oos.writeObject(message);
-		}catch(Exception e){
-			System.err.println(e.getMessage());
-		}
-	}
-
-	@Override
-	public void closeCommunication() {
-		try {
-			if (oos != null)
-				oos.close();
-			if (ois != null)
-				ois.close();
+			oos.flush();
 		}catch(Exception e){
 			System.err.println(e.getMessage());
 		}
@@ -59,13 +52,18 @@ public class CommunicationProtocolImplementation implements ICommunicationProtoc
 	private void resolveData(Message msg, ObjectOutputStream output, ObjectInputStream input) throws IOException{
 		long packets = msg.getPackets();
 		if ((packets & Communication.F_AskChallenge) == Communication.F_AskChallenge){ 
-			msg.setPackets(packets | Communication.F_AcceptChallenge);
-			msg.setData(new String("test_secret").getBytes());
-			output.writeObject(msg);
-			output.flush();
+			//Ici envoyer code secret
 		}
 		else if ((packets | Communication.F_AskChallenge | Communication.F_AcceptChallenge) == (Communication.F_AskChallenge | Communication.F_AcceptChallenge)){ 
-			System.out.println(new String(msg.getData(), "UTF-8"));
+			//Ici verif login + mdp
+		}
+		else if ((packets & Communication.F_IsLogged | Communication.F_SentMsg) == (Communication.F_IsLogged | Communication.F_SentMsg)){
+			//Ici gerer message text ou fichier
+			dispatcherService.dispatchMessage(this, commThread, msg);
+		}	
+		else if ((packets & Communication.F_ShutDown) == Communication.F_ShutDown){
+			//Deconnexion
+			
 		}
 		else {
 			System.out.println("unknown packet");

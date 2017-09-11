@@ -48,7 +48,7 @@ public class ServerThread extends Thread implements Runnable, ICallback<Communic
 	
 	@Override
 	public void onCalledBack(CommunicationThread commThread) {
-		lstClients.remove(commThread);	
+		lstClients.remove(commThread);
 	}
 	
 	@Override

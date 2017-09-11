@@ -22,12 +22,12 @@ public class CommunicationThread extends Thread implements Runnable {
 	public CommunicationThread(ServerThread server, Socket clSocket){
 		this.server = server;
 		this.clSocket = clSocket;
-		this.commProtocol = new CommunicationProtocolImplementation(this);
+		this.commProtocol = new CommunicationProtocolImplementation(this, server.getDispatcherService());
 	}
 	
 	@Override
 	public void run() {
-		commProtocol.communicate(server.getDispatcherService());
+		commProtocol.communicate();
 		server.onCalledBack(this);
 		closeSocket();
 	}
