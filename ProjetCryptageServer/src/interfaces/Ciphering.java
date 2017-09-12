@@ -7,5 +7,8 @@ public class Ciphering {
 		byte[] decrypt(byte[] input);
 	}
 	
-	//public interface I
+	public interface IHashable{
+		long createHash(byte[] input);
+		//CRC32 method
+	}
 }

@@ -2,6 +2,7 @@ package main;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
+import java.util.zip.CRC32;
 
 import implementations.CBCCypher;
 import models.Message;
@@ -11,9 +12,10 @@ public class Run {
 
 	public static void main(String[] args) throws InvalidAlgorithmParameterException, UnsupportedEncodingException {
 		// TODO Auto-generated method stub
-		//ServerThread server = new ServerThread(8888);
-		//server.start();
+		ServerThread server = new ServerThread(8888);
+		server.start();
 		
+		/*
 		long i = 32;
 		long y = 64;
 		long x = 128;
@@ -25,7 +27,7 @@ public class Run {
 		byte[] enc = cyp.encrypt("testtest".getBytes());
 		System.out.println(new String(enc,"UTF-8"));
 		byte[] dec = cyp.decrypt(enc);
-		System.out.println(new String(dec,"UTF-8"));
+		System.out.println(new String(dec,"UTF-8"));*/
 	}
 
 }

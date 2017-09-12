@@ -6,4 +6,7 @@ public class Patterns {
 		void onCalledBack(T arg);
 	}
 	
+	public interface IDelegate<T,S>{
+		T action(S arg);
+	}
 }

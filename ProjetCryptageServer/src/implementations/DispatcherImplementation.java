@@ -16,10 +16,10 @@ public class DispatcherImplementation implements IDispatcherService {
 	}
 	
 	@Override
-	public void dispatchMessage(ICommunicationProtocol protocol, CommunicationThread sender, Message message) {
+	public void dispatchMessage(ICommunicationProtocol<Message> protocol, CommunicationThread sender, Message message) {
 		for(CommunicationThread receiver : lstClients){
 			if (!receiver.equals(sender)){
-				receiver.getCommunicationProtocol().sendMessage(message);
+				receiver.getCommunicationProtocol().sendResponse(message);
 			}
 		}	
 	}
