@@ -3,18 +3,19 @@ package threading;
 import java.net.Socket;
 
 import implementations.CommunicationProtocolImplementation;
-import interfaces.Communication;
+import implementations.ResponseProcessorImplementation;
 import interfaces.Communication.ICommunicationProtocol;
 import interfaces.Communication.IDispatcherService;
 import interfaces.Patterns.ICallback;
 import models.Message;
 
-public class CommunicationThread extends Thread implements Runnable, ICallback<Message>{
+public class CommunicationThread extends Thread implements Runnable {
 
 	private final ServerThread server;
 	private final Socket clSocket;
 	private final ICommunicationProtocol<Message> commProtocol;
 	private final IDispatcherService dispatcherService;
+	private final ICallback<Message> callback;
 	
 	public Socket getSocket(){
 		return clSocket;
@@ -28,12 +29,13 @@ public class CommunicationThread extends Thread implements Runnable, ICallback<M
 		this.server = server;
 		this.clSocket = clSocket;
 		this.dispatcherService = server.getDispatcherService();
-		this.commProtocol = new CommunicationProtocolImplementation(this.clSocket, this);
+		this.commProtocol = new CommunicationProtocolImplementation(this.clSocket);
+		this.callback = new ResponseProcessorImplementation(dispatcherService, commProtocol, this);
 	}
 	
 	@Override
 	public void run() {
-		commProtocol.getResponse();
+		commProtocol.getResponse(callback);
 		server.onCalledBack(this);
 		closeSocket();
 	}
@@ -46,28 +48,4 @@ public class CommunicationThread extends Thread implements Runnable, ICallback<M
 			System.out.println(e.getMessage());
 		}
 	}
-
-	@Override
-	public void onCalledBack(Message msg) {
-		long packets = msg.getPackets();
-		if ((packets & Communication.F_AskChallenge) == Communication.F_AskChallenge){ 
-			//Ici envoyer code secret
-			
-		}
-		else if ((packets | Communication.F_AskChallenge | Communication.F_AcceptChallenge) == 
-				(Communication.F_AskChallenge | Communication.F_AcceptChallenge)){ 
-			//Ici verif login + mdp
-		}
-		else if ((packets & Communication.F_IsLogged | Communication.F_SentMsg) == (Communication.F_IsLogged | Communication.F_SentMsg)){
-			//Ici gerer message text ou fichier
-			dispatcherService.dispatchMessage(commProtocol, this, msg);
-		}	
-		else if ((packets & Communication.F_ShutDown) == Communication.F_ShutDown){
-			//Deconnexion
-			
-		}
-		else {
-			System.out.println("unknown packet");
-		}		
-	}	
 }

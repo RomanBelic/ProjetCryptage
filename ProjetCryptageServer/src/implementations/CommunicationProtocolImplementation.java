@@ -11,16 +11,14 @@ import models.Message;
 public class CommunicationProtocolImplementation implements ICommunicationProtocol<Message> {
 	
 	private final Socket socket;
-	private final ICallback<Message> callback;
 	private ObjectOutputStream oos;
 	
-	public CommunicationProtocolImplementation(Socket socket, ICallback<Message> callback){
+	public CommunicationProtocolImplementation(Socket socket){
 		this.socket = socket;
-		this.callback = callback;
 	}
 	
 	@Override
-	public void getResponse() {
+	public void getResponse(ICallback<Message> callback) {
 		try(ObjectInputStream ois = new ObjectInputStream(socket.getInputStream())){
 			oos = new ObjectOutputStream(socket.getOutputStream());
 			Message msg;

@@ -22,6 +22,7 @@ public class ResponseProcessorImplementation implements ICallback<Message> {
 	@Override
 	public void onCalledBack(Message msg) {
 		long packets = msg.getPackets();
+		System.out.print("msg");
 		if ((packets & Communication.F_AskChallenge) == Communication.F_AskChallenge){ 
 			//Ici envoyer code secret
 			

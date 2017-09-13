@@ -1,5 +1,6 @@
 package interfaces;
 
+import interfaces.Patterns.ICallback;
 import models.Message;
 import threading.CommunicationThread;
 
@@ -10,7 +11,7 @@ public class Communication {
 	}
 	
 	public interface ICommunicationProtocol<T>{
-		void getResponse();
+		void getResponse(ICallback<Message> callback);
 		void sendResponse(T message);
 	}
 	
