@@ -37,7 +37,7 @@ public class CommunicationProtocolImplementation implements ICommunicationProtoc
 	}
 	
 	@Override
-	public void sendResponse(Message message) {
+	public synchronized void sendResponse(Message message) {
 		try {
 			oos.writeObject(message);
 			oos.flush();

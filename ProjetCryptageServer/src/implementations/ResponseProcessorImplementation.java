@@ -4,6 +4,7 @@ import interfaces.Communication;
 import interfaces.Communication.ICommunicationProtocol;
 import interfaces.Communication.IDispatcherService;
 import interfaces.Patterns.ICallback;
+import models.Client;
 import models.Message;
 import threading.CommunicationThread;
 
@@ -12,6 +13,7 @@ public class ResponseProcessorImplementation implements ICallback<Message> {
 	private final IDispatcherService dispatcherService;
 	private final ICommunicationProtocol<Message> commProtocol;
 	private final CommunicationThread sender;
+	private Client cl;
 	
 	public ResponseProcessorImplementation(IDispatcherService dispatcherService, ICommunicationProtocol<Message> commProtocol, CommunicationThread sender){
 		this.dispatcherService = dispatcherService;
