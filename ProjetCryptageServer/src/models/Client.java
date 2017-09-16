@@ -26,6 +26,10 @@ public class Client{
 		this.name = name;
 	}
 	
+	public boolean isEmpty(){
+		return id > 0;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		return obj instanceof Client && ((Client)obj).id == id;

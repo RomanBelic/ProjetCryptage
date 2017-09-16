@@ -9,11 +9,13 @@ public class Message implements Serializable {
 	private String publicKey;
 	private byte[] data;
 	private long packets;
+	private String senderName;
 	
 	public Message(){
 		publicKey = "";
 		data = new byte[0];
 		packets = 0l;
+		senderName = "";
 	}
 	
 	public String getPublicKey() {
@@ -34,4 +36,11 @@ public class Message implements Serializable {
 	public void setPackets(long packets) {
 		this.packets = packets;
 	}
+	public String getSenderName() {
+		return senderName;
+	}
+	public void setSenderName(String senderName) {
+		this.senderName = senderName;
+	}
+	
 }
