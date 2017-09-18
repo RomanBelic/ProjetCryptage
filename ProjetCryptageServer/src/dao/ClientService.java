@@ -1,6 +1,8 @@
 package dao;
 
 import java.sql.ResultSet;
+
+import interfaces.Communication;
 import interfaces.Patterns.IDelegate;
 import models.Client;
 
@@ -34,6 +36,7 @@ public class ClientService {
 	
 	public int insertClient(String login, String pass, String name) {
 		Client cl = clientDAO.getObject(getClietByLoginQuery, clientReader, login);
-		return (cl != null) ? -1 : clientDAO.insertObject(insertClientQuery, login, pass, name);
+		if (cl != null) return Communication.Conflict;
+		return clientDAO.insertObject(insertClientQuery, login, pass, name) > 0 ? Communication.Created : Communication.InternalError;
 	}
 }

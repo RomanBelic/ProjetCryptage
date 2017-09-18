@@ -17,6 +17,7 @@ public class ConfigLoader {
 			props[1] = prop.getProperty("CBCKey");
 			props[2] = prop.getProperty("HashPrefix");
 			props[3] = prop.getProperty("HashPostfix");
+			props[4] = prop.getProperty("CBCVector");
 		}catch(Exception e){
 			System.err.println("Properties not found");
 		}
@@ -36,6 +37,10 @@ public class ConfigLoader {
 	
 	public static String getHashPostfix (){
 		return instance.props[3];
+	}
+	
+	public static String getCBCVector (){
+		return instance.props[4];
 	}
 
 }

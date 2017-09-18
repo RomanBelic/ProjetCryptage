@@ -7,15 +7,15 @@ public class Message implements Serializable {
 	private static final long serialVersionUID = -5130689345004322457L;
 	
 	private String publicKey;
-	private byte[] data;
+	private String message;
 	private long packets;
 	private String senderName;
 	
 	public Message(){
-		publicKey = "";
-		data = new byte[0];
+		publicKey = new String();
+		message = new String();
+		senderName = new String();
 		packets = 0l;
-		senderName = "";
 	}
 	
 	public String getPublicKey() {
@@ -24,11 +24,11 @@ public class Message implements Serializable {
 	public void setPublicKey(String publicKey) {
 		this.publicKey = publicKey;
 	}
-	public byte[] getData() {
-		return data;
+	public String getMessage() {
+		return message;
 	}
-	public void setData(byte[] data) {
-		this.data = data;
+	public void setMessage(String data) {
+		this.message = data;
 	}
 	public long getPackets() {
 		return packets;

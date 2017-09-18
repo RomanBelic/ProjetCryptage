@@ -20,13 +20,13 @@ public class Upload extends Message implements Serializable{
 		this.name = name;
 	}
 	public String getExtension() {
-		return extension;
+		return this.extension;
 	}
 	public void setExtension(String extension) {
 		this.extension = extension;
 	}
 	public byte[] getData() {
-		return data;
+		return this.data;
 	}
 	public void setData(byte[] data) {
 		this.data = data;

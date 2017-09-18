@@ -46,4 +46,19 @@ public class CommunicationProtocolImplementation implements ICommunicationProtoc
 		}
 	}
 
+	@Override
+	public synchronized void closeSocket() {
+		// TODO Auto-generated method stub
+		try {
+			if (oos != null)
+				oos.close();
+			if (socket != null)
+				socket.close();
+		}catch(Exception e){
+			System.err.println(e.getMessage());
+		}
+	}
+	
+	
+
 }

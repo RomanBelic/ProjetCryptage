@@ -8,7 +8,10 @@ public class Ciphering {
 	}
 	
 	public interface IHashable{
-		long createHash(byte[] input);
 		//CRC32 method
+		long createHash(byte[] input);
+		String createHashString(String input);
+		byte[] generateSecretKey(int length);
+		String generateSecretKeyString(int length);
 	}
 }

@@ -6,13 +6,13 @@ import java.util.Arrays;
 
 import interfaces.Ciphering.ICipher;
 
-public class CBCCypher implements ICipher {
+public class CBCCipher implements ICipher {
 	
 	private final byte[] keyBytes;
 	private final int blockLength;
 	private final byte[] initVectorBytes;
 	
-	public CBCCypher (String key, String initVector) throws InvalidAlgorithmParameterException{
+	public CBCCipher (String key, String initVector) throws InvalidAlgorithmParameterException{
 		this.keyBytes = key.getBytes();
 		this.blockLength = keyBytes.length;
 		this.initVectorBytes = initVector.getBytes();
@@ -59,7 +59,6 @@ public class CBCCypher implements ICipher {
 					prevBlock[i] = buffer[i];
 				}
 				bWrote += bRead;
-				System.out.println(bWrote);
 			}
 		}catch (Exception e){
 			System.err.println(e.getMessage());

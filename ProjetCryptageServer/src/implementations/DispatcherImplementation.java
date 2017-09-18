@@ -5,6 +5,7 @@ import java.util.List;
 import interfaces.Communication.ICommunicationProtocol;
 import interfaces.Communication.IDispatcherService;
 import models.Message;
+import models.Upload;
 import threading.CommunicationThread;
 
 public class DispatcherImplementation implements IDispatcherService {
@@ -20,5 +21,11 @@ public class DispatcherImplementation implements IDispatcherService {
 		for(CommunicationThread receiver : lstClients){
 			receiver.getCommunicationProtocol().sendResponse(message);		
 		}	
+	}
+
+	@Override
+	public void uploadFile(Upload upload) {
+		// TODO Auto-generated method stub
+		
 	}
 }

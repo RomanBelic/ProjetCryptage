@@ -1,11 +1,9 @@
 package threading;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import implementations.FileSaverImplementation;
+import implementations.FileEncryptorImplementation;
 import interfaces.Patterns.IDelegate;
 import models.Upload;
 
@@ -18,7 +16,7 @@ public class FileSaverThread extends Thread implements Runnable {
 	public FileSaverThread(){
 		this.vect = new Vector<>(64);
 		this.isActive = new AtomicBoolean(true);
-		this.isaver = new FileSaverImplementation("Uploads");
+		this.isaver = new FileEncryptorImplementation("Uploads");
 	}
 	
 	@Override

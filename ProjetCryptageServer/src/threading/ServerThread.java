@@ -16,7 +16,6 @@ public class ServerThread extends Thread implements Runnable, ICallback<Communic
 	private volatile AtomicBoolean isActive = new AtomicBoolean(false);
 	private final List<CommunicationThread> lstClients;
 	private final IDispatcherService dispatcherService;
-	private final FileSaverThread fileSaver;
 	
 	public IDispatcherService getDispatcherService() {
 		return dispatcherService;
@@ -24,19 +23,18 @@ public class ServerThread extends Thread implements Runnable, ICallback<Communic
 	
 	public ServerThread(int port){
 		lstClients = new ArrayList<>(64);
-		fileSaver = new FileSaverThread();
 		dispatcherService = new DispatcherImplementation(lstClients);
 		try {
 			servSocket = new ServerSocket (port);
 			isActive.set(true);
 		}catch(Exception e){
 			System.err.print(e.getMessage());
+			System.exit(-1);
 		}
 	}
 
 	@Override
 	public void run() {
-		fileSaver.start();
 		while(isActive.get()){
 			try {
 				Socket clSocket = servSocket.accept();
@@ -69,6 +67,5 @@ public class ServerThread extends Thread implements Runnable, ICallback<Communic
 		}catch(Exception e){
 			System.err.println(e.getMessage());
 		}
-		fileSaver.stopSaver();
 	}
 }

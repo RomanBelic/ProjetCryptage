@@ -10,6 +10,7 @@ public class ConnectionManager {
 		try{
 			return DriverManager.getConnection(ConfigLoader.getConnectionString());
 		}catch(Exception e){
+			System.err.println(e.getMessage());
 			return null;
 		}
 	}
