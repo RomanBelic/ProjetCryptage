@@ -4,6 +4,7 @@ import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import implementations.FileEncryptorImplementation;
+import interfaces.Patterns.ICallback;
 import interfaces.Patterns.IDelegate;
 import models.Upload;
 
@@ -11,12 +12,18 @@ public class FileSaverThread extends Thread implements Runnable {
 
 	private volatile AtomicBoolean isActive;
 	private final Vector<Upload> vect;
-	private final IDelegate<Void, Upload> isaver;
+	private final IDelegate<String, Upload> isaver;
+	private final ICallback<String> callBack;
 	
-	public FileSaverThread(){
+	public FileSaverThread(ICallback<String> callBack){
 		this.vect = new Vector<>(64);
 		this.isActive = new AtomicBoolean(true);
 		this.isaver = new FileEncryptorImplementation("Uploads");
+		this.callBack = callBack;
+	}
+	
+	public boolean getIsActive(){
+		return this.isActive.get();
 	}
 	
 	@Override
@@ -30,7 +37,7 @@ public class FileSaverThread extends Thread implements Runnable {
 						wait();
 				}
 				upload = vect.iterator().next();
-				isaver.action(upload);
+				callBack.onCalledBack(isaver.action(upload));
 				removeFirst();
 			}
 		}catch(Exception e){

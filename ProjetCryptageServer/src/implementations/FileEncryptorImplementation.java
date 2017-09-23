@@ -8,7 +8,7 @@ import interfaces.Patterns.IDelegate;
 import models.Upload;
 import utils.ConfigLoader;
 
-public class FileEncryptorImplementation implements IDelegate<Void, Upload> {
+public class FileEncryptorImplementation implements IDelegate<String, Upload> {
 	
 	private final String dirName;
 	private ICipher fileCipher;
@@ -24,19 +24,16 @@ public class FileEncryptorImplementation implements IDelegate<Void, Upload> {
 	}
 	
 	@Override
-	public Void action(Upload upload) {
+	public String action(Upload upload) {
+		String filepath = dirName.concat("/").concat(upload.getName()).concat(upload.getExtension()).concat(".encrypted");
 		byte[] eData = fileCipher.encrypt(upload.getData());
-		try (FileOutputStream fs = new FileOutputStream(
-				dirName.concat("/").
-				concat(upload.getName()).
-				concat(upload.getExtension()).
-				concat(".encrypted")
-				)){
+		try (FileOutputStream fs = new FileOutputStream(filepath)){
 			fs.write(eData);
 		}catch(Exception e){
+			filepath = null;
 			System.err.println(e.getMessage());
 		}
-		return null;
+		return filepath;
 	}
 
 }

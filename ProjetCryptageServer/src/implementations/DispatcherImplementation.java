@@ -7,13 +7,16 @@ import interfaces.Communication.IDispatcherService;
 import models.Message;
 import models.Upload;
 import threading.CommunicationThread;
+import threading.FileSaverThread;
 
 public class DispatcherImplementation implements IDispatcherService {
 
+	private final FileSaverThread fileSaver;
 	private final List<CommunicationThread> lstClients;
 	
-	public DispatcherImplementation(List<CommunicationThread> lstClients){
+	public DispatcherImplementation(List<CommunicationThread> lstClients, FileSaverThread fileSaver){
 		this.lstClients = lstClients;
+		this.fileSaver = fileSaver;
 	}
 	
 	@Override
@@ -25,7 +28,8 @@ public class DispatcherImplementation implements IDispatcherService {
 
 	@Override
 	public void uploadFile(Upload upload) {
-		// TODO Auto-generated method stub
-		
+		if (fileSaver.isAlive()){
+			fileSaver.appendToQueue(upload);
+		}
 	}
 }

@@ -54,6 +54,9 @@ public class ResponseProcessorImplementation implements ICallback<Message> {
 				msg.setMessage(msgContent);
 				msg.setPackets(Communication.F_PassedChallenge);
 				commProtocol.sendResponse(msg);
+			}else {
+				msg.setMessage(String.valueOf(Communication.Unauthorized));
+				commProtocol.sendResponse(msg);
 			}
 		}
 		else if ((packets | Communication.F_PassedChallenge | Communication.F_SentMsg) == (Communication.F_PassedChallenge | Communication.F_SentMsg)){

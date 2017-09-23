@@ -9,13 +9,15 @@ import java.io.InputStream;
 import interfaces.Ciphering.ICipher;
 import interfaces.Patterns.IDelegate;
 import utils.ConfigLoader;
-import utils.Utils;
 
-public class FileDecryptorImplementation implements IDelegate<Void, File> {
+public class FileDecryptorImplementation implements IDelegate<Void, String> {
 
 	private ICipher fileCipher;
+	private final String dir;
 	
-	public FileDecryptorImplementation(){
+	public FileDecryptorImplementation(String dir){
+		this.dir = dir;
+		new File(dir).mkdir();
 		try {
 			this.fileCipher = new CBCCipher(ConfigLoader.getCBCKey(), ConfigLoader.getCBCVector());
 		}catch(Exception e){
@@ -24,12 +26,10 @@ public class FileDecryptorImplementation implements IDelegate<Void, File> {
 	}
 	
 	@Override
-	public Void action(File file) {
+	public Void action(String filePath) {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream(2048);
-		String fileName = Utils.resolveName(file.getName());
-		String extension = Utils.resolveExtension(file.getName());
 		byte[] data = null;
-		try (InputStream fis = new FileInputStream(file)){
+		try (InputStream fis = new FileInputStream(filePath)){
 			byte[] buff = new byte[2048];
 			int bRead;
 			while((bRead = fis.read(buff, 0, buff.length)) > 0){
@@ -40,7 +40,10 @@ public class FileDecryptorImplementation implements IDelegate<Void, File> {
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
-		try (FileOutputStream fos = new FileOutputStream("Uploads/".concat(fileName).concat(extension), false)){
+		filePath = filePath.replace(".encrypted", "");
+		int subFrom = filePath.lastIndexOf(File.separatorChar) > - 1 ? filePath.lastIndexOf(File.separatorChar) + 1 : 0;
+		filePath = filePath.substring(subFrom, filePath.length());
+		try (FileOutputStream fos = new FileOutputStream(dir.concat("/").concat(filePath), false)){
 			fos.write(data);
 		}catch (Exception e) {
 			System.err.println(e.getMessage());

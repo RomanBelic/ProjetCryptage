@@ -32,4 +32,5 @@ public class Communication {
 	public static int Created = 201;
 	public static int Conflict = 409;
 	public static int InternalError = 500;
+	public static int Unauthorized = 401; 
 }

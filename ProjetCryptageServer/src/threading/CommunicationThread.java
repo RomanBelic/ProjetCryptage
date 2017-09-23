@@ -14,7 +14,6 @@ public class CommunicationThread extends Thread implements Runnable {
 	private final ServerThread server;
 	private final Socket clSocket;
 	private final ICommunicationProtocol<Message> commProtocol;
-	private final IDispatcherService dispatcherService;
 	private final ICallback<Message> callback;
 	
 	public Socket getSocket(){
@@ -25,11 +24,10 @@ public class CommunicationThread extends Thread implements Runnable {
 		return commProtocol;
 	}
 
-	public CommunicationThread(ServerThread server, Socket clSocket){
+	public CommunicationThread(ServerThread server, IDispatcherService dispatcherService, Socket clSocket){
 		this.server = server;
 		this.clSocket = clSocket;
-		this.dispatcherService = server.getDispatcherService();
-		this.commProtocol = new CommunicationProtocolImplementation(this.clSocket);
+		this.commProtocol = new CommunicationProtocolImplementation(clSocket);
 		this.callback = new ResponseProcessorImplementation(dispatcherService, commProtocol, this);
 	}
 	
@@ -41,11 +39,6 @@ public class CommunicationThread extends Thread implements Runnable {
 	}
 	
 	public void closeSocket(){
-		try {
-			if (clSocket != null)
-				clSocket.close();
-		}catch(Exception e){
-			System.out.println(e.getMessage());
-		}
+		commProtocol.closeSocket();
 	}
 }
