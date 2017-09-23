@@ -16,21 +16,18 @@ import threading.CommunicationThread;
 import threading.FileSaverThread;
 import threading.ServerThread;
 
-public class MainFrameLogic extends MainFrame {
+public class MainFrameLogic implements IMainFrame {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3114397683245521765L;
 	private final ICallback<String> onFileSavedCallBack;
 	private final List<CommunicationThread> lstClients;
 	private final FileDecryptorImplementation fileDecryptor;
 	private IDispatcherService dispatcherService;
 	private ServerThread serverThread;
 	private FileSaverThread fileSaverThread;
+	private final MainFrame ui;
 	
-	public MainFrameLogic(){
-		super();
+	public MainFrameLogic(MainFrame ui){
+		this.ui = ui; 
 		this.fileDecryptor = new FileDecryptorImplementation("Decrypted");
 		this.onFileSavedCallBack = this::onSavedEncryptedFile;
 		this.lstClients = new ArrayList<>(64);
@@ -38,8 +35,8 @@ public class MainFrameLogic extends MainFrame {
 	}
 	
 	private void initUI(){
-		super.setVisible(true);
-		loadFilesToComboBox(fileBox);	
+		ui.setVisible(true);
+		loadFilesToComboBox(ui.fileBox);	
 	}
 	
 	private void loadFilesToComboBox(JComboBox<ComboBoxItem> jcb){
@@ -53,16 +50,16 @@ public class MainFrameLogic extends MainFrame {
 	}
 	
 	@Override
-	protected void onBtnDecryptClick(ActionEvent e, JComponent sender){
-		int index = fileBox.getSelectedIndex();
+	public void onBtnDecryptClick(ActionEvent e, JComponent sender){
+		int index = ui.fileBox.getSelectedIndex();
 		if (index <= -1)
 			return;
 		
-		fileDecryptor.action(fileBox.getItemAt(index).getValue());
+		fileDecryptor.action(ui.fileBox.getItemAt(index).getValue());
 	}
 	
 	@Override
-	protected void onBtnStartClick(ActionEvent e, JComponent sender){ 
+	public void onBtnStartClick(ActionEvent e, JComponent sender){ 
 		fileSaverThread = new FileSaverThread(onFileSavedCallBack);
 		dispatcherService = new DispatcherImplementation(lstClients, fileSaverThread);
 		serverThread = new ServerThread(8888, lstClients, dispatcherService);
@@ -74,11 +71,11 @@ public class MainFrameLogic extends MainFrame {
 	private void onSavedEncryptedFile(String filePath){
 		int subFrom = filePath.lastIndexOf(File.separatorChar) > - 1 ? filePath.lastIndexOf(File.separatorChar) + 1 : 0;
 		String fileName = filePath.substring(subFrom, filePath.length());
-		fileBox.addItem(new ComboBoxItem(fileName, filePath));
+		ui.fileBox.addItem(new ComboBoxItem(fileName, filePath));
 	}
 
 	@Override
-	protected void onBtnStopClick(ActionEvent e, JComponent sender) {
+	public void onBtnStopClick(ActionEvent e, JComponent sender) {
 		if (serverThread.getIsActive()){
 			serverThread.stopServer();
 			System.out.println("Server stopped");

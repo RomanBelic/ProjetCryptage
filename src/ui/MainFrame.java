@@ -2,8 +2,6 @@ package ui;
 
 import javax.swing.JFrame;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
-
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
@@ -18,6 +16,7 @@ public class MainFrame extends JFrame{
 	protected final JButton btnDecrypt;
 	protected final JButton btnStartServer;
 	protected final JButton btnStopServer;
+	private final IMainFrame uiLogic;
 	
 	public MainFrame() {
 		getContentPane().setLayout(null);		
@@ -36,17 +35,16 @@ public class MainFrame extends JFrame{
 		getContentPane().add(btnStopServer);
 		setSize(new Dimension(600, 350));
 		setLocationRelativeTo(null);
+		
+		uiLogic = new MainFrameLogic(this);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		initActions();
+		initActions(uiLogic);
 	}
 	
-	protected void onBtnDecryptClick(ActionEvent e, JComponent sender){	}
-	protected void onBtnStartClick(ActionEvent e, JComponent sender){ }
-	protected void onBtnStopClick(ActionEvent e, JComponent sender){ }
 	
-	private void initActions (){
-		btnDecrypt.addActionListener((ActionEvent e) -> onBtnDecryptClick (e, btnDecrypt));
-		btnStartServer.addActionListener((ActionEvent e) -> onBtnStartClick (e, btnDecrypt));
-		btnStopServer.addActionListener((ActionEvent e) -> onBtnStopClick (e, btnDecrypt));
+	private void initActions (IMainFrame uiLogic){
+		btnDecrypt.addActionListener((ActionEvent e) -> uiLogic.onBtnDecryptClick(e, btnDecrypt));
+		btnStartServer.addActionListener((ActionEvent e) -> uiLogic.onBtnStartClick (e, btnDecrypt));
+		btnStopServer.addActionListener((ActionEvent e) -> uiLogic.onBtnStopClick (e, btnDecrypt));
 	}
 }
