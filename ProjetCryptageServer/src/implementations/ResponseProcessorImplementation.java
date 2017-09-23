@@ -8,6 +8,7 @@ import interfaces.Communication.IDispatcherService;
 import interfaces.Patterns.ICallback;
 import models.Client;
 import models.Message;
+import models.Upload;
 import threading.CommunicationThread;
 
 public class ResponseProcessorImplementation implements ICallback<Message> {
@@ -61,9 +62,16 @@ public class ResponseProcessorImplementation implements ICallback<Message> {
 		}
 		else if ((packets | Communication.F_PassedChallenge | Communication.F_SentMsg) == (Communication.F_PassedChallenge | Communication.F_SentMsg)){
 			//Ici gerer message text ou fichier
-			if (client != null){
+			if (client == null)
+				return;
+			if (msg.getClass() == Message.class){
 				msg.setSenderName(client.getName());
 				dispatcherService.dispatchMessage(commProtocol, sender, msg);
+			}
+			else if (msg.getClass() == Upload.class){
+				Upload upload = new Upload();
+				upload = (Upload)msg;
+				dispatcherService.uploadFile(upload);
 			}
 		}	
 		else if ((packets | Communication.F_AskInscription) == Communication.F_AskInscription){

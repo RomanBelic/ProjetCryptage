@@ -3,6 +3,7 @@ package main;
 import java.awt.EventQueue;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
+
 import ui.MainFrameLogic;
 
 public class Run {
@@ -11,6 +12,6 @@ public class Run {
 		EventQueue.invokeLater(() -> {
 			//TODO Auto-generated method stub
 			new MainFrameLogic();
-		});									  	
+		});		
 	}														  
 }
