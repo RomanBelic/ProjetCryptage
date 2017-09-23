@@ -14,10 +14,10 @@ public class MainFrame extends JFrame{
 	 */
 	private static final long serialVersionUID = -8808883923263763897L;
 	
-	protected JComboBox<ComboBoxItem> fileBox;
-	protected JButton btnDecrypt;
-	protected JButton btnStartServer;
-	protected JButton btnStopServer;
+	protected final JComboBox<ComboBoxItem> fileBox;
+	protected final JButton btnDecrypt;
+	protected final JButton btnStartServer;
+	protected final JButton btnStopServer;
 	
 	public MainFrame() {
 		getContentPane().setLayout(null);		
