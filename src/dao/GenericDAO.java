@@ -39,6 +39,7 @@ public class GenericDAO<T> {
 				}
 			}
 		} catch (SQLException e) {
+			id = -1;
 			System.err.println(e.getMessage());
 		}
 		return id;
