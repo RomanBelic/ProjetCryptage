@@ -5,27 +5,21 @@ import interfaces.Ciphering.IHashable;
 import interfaces.Communication;
 import interfaces.Communication.ICommunicationProtocol;
 import interfaces.Communication.IDispatcherService;
-import interfaces.Patterns.ICallback;
+import interfaces.Communication.IResponseProcessor;
 import models.Client;
 import models.Message;
 import models.Upload;
-import threading.CommunicationThread;
 
-public class ResponseProcessorImplementation implements ICallback<Message> {
+public class ResponseProcessorImplementation implements IResponseProcessor<Message> {
 
-	private final IDispatcherService dispatcherService;
 	private final ICommunicationProtocol<Message> commProtocol;
-	private final CommunicationThread sender;
 	private final ClientService clientService;
 	private final IHashable hasher;
 	private Client client;
 	private String secretHash;
 	
-	public ResponseProcessorImplementation(IDispatcherService dispatcherService, ICommunicationProtocol<Message> commProtocol, 
-			CommunicationThread sender){
-		this.dispatcherService = dispatcherService;
+	public ResponseProcessorImplementation(ICommunicationProtocol<Message> commProtocol){
 		this.commProtocol = commProtocol;
-		this.sender = sender;
 		this.clientService = new ClientService();
 		this.hasher = new HashImplementation();
 		this.client = null;
@@ -33,14 +27,16 @@ public class ResponseProcessorImplementation implements ICallback<Message> {
 	}
 	
 	@Override
-	public void onCalledBack(Message msg) {
+	public void processResponse (Message msg, IDispatcherService<Message> dispatcherService) {
 		long packets = msg.getPackets();
+		System.out.println("received");
 		if ((packets | Communication.F_AskChallenge) == Communication.F_AskChallenge){ 
 			//Ici envoyer code secret
 			String srvChallengeKey = hasher.generateSecretKeyString(10);
 			secretHash = hasher.createHashString(srvChallengeKey);
 			msg.setPackets(Communication.F_AcceptChallenge);
 			msg.setMessage(srvChallengeKey);
+			msg.setCode(Communication.Accept);
 			commProtocol.sendResponse(msg);
 		}
 		else if ((packets |  Communication.F_AcceptChallenge) == Communication.F_AcceptChallenge){ 
@@ -51,12 +47,11 @@ public class ResponseProcessorImplementation implements ICallback<Message> {
 				String login = split.length > 1 ?  split[1] : null;
 				String pass = split.length > 2 ?  split[2] : null;
 				client = clientService.getClient(login, pass);
-				String msgContent = (client != null) ? String.valueOf(Communication.OK) : String.valueOf(Communication.No_Content);
-				msg.setMessage(msgContent);
+				msg.setCode((client != null) ? Communication.OK : Communication.No_Content);
 				msg.setPackets(Communication.F_PassedChallenge);
 				commProtocol.sendResponse(msg);
 			}else {
-				msg.setMessage(String.valueOf(Communication.Unauthorized));
+				msg.setCode(Communication.Unauthorized);
 				commProtocol.sendResponse(msg);
 			}
 		}
@@ -66,7 +61,7 @@ public class ResponseProcessorImplementation implements ICallback<Message> {
 				return;
 			if (msg.getClass() == Message.class){
 				msg.setSenderName(client.getName());
-				dispatcherService.dispatchMessage(commProtocol, sender, msg);
+				dispatcherService.dispatchMessage(commProtocol, msg);
 			}
 			else if (msg.getClass() == Upload.class){
 				Upload upload = new Upload();
@@ -80,8 +75,8 @@ public class ResponseProcessorImplementation implements ICallback<Message> {
 			String login = split.length > 0 ? split[0] : null;
 			String pass = split.length > 1 ?  split[1] : null;
 			String name = split.length > 2 ?  split[2] : null;
-			int response = clientService.insertClient(login, pass, name);
-			msg.setMessage(String.valueOf(response));
+			int code = clientService.insertClient(login, pass, name);
+			msg.setCode(code);
 			commProtocol.sendResponse(msg);
 		}
 		else if ((packets & Communication.F_ShutDown) == Communication.F_ShutDown){

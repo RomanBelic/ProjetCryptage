@@ -16,19 +16,24 @@ public class FileSaverThread extends Thread implements Runnable {
 	private final ICallback<String> callBack;
 	
 	public FileSaverThread(ICallback<String> callBack){
+		this.isActive = new AtomicBoolean(false);
 		this.vect = new Vector<>(64);
-		this.isActive = new AtomicBoolean(true);
 		this.isaver = new FileEncryptorImplementation("Uploads");
 		this.callBack = callBack;
 	}
 	
-	public boolean getIsActive(){
-		return this.isActive.get();
+	@Override
+	public synchronized void start() {
+		if (isActive.get())
+			return;
+		super.start();
+		isActive.set(true);
 	}
 	
 	@Override
 	public void run() {
 		super.run();
+		setPriority(MIN_PRIORITY);
 		Upload upload;
 		try {
 			while(isActive.get()){
@@ -43,6 +48,7 @@ public class FileSaverThread extends Thread implements Runnable {
 		}catch(Exception e){
 			System.err.println(e.getMessage());
 		}
+		isActive.set(false);
 	}
 	
 	public synchronized void appendToQueue(Upload upload){
@@ -58,6 +64,8 @@ public class FileSaverThread extends Thread implements Runnable {
 	}
 	
 	public synchronized void stopSaver(){
+		if (!isActive.get())
+			return;
 		isActive.set(false);
 		vect.clear();
 		this.notify();

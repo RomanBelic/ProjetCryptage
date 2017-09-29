@@ -1,21 +1,22 @@
 package interfaces;
 
-import interfaces.Patterns.ICallback;
-import models.Message;
 import models.Upload;
-import threading.CommunicationThread;
 
 public class Communication {
 	
-	public interface IDispatcherService{
-		void dispatchMessage (ICommunicationProtocol<Message> protocol, CommunicationThread sender, Message message);
+	public interface IDispatcherService<T>{
+		void dispatchMessage (ICommunicationProtocol<T> protocol, T message);
 		void uploadFile(Upload upload);
 	}
 	
 	public interface ICommunicationProtocol<T>{
-		void getResponse(ICallback<Message> callback);
+		T getResponse();
 		void sendResponse(T message);
 		void closeSocket();
+	}
+	
+	public interface IResponseProcessor<T> {
+		public void processResponse(T arg, IDispatcherService<T> dispatcherService);
 	}
 	
 	public static long F_SentMsg = 8;
@@ -30,6 +31,7 @@ public class Communication {
 	public static int No_Content = 204;
 	public static int OK = 200;
 	public static int Created = 201;
+	public static int Accept = 202;
 	public static int Conflict = 409;
 	public static int InternalError = 500;
 	public static int Unauthorized = 401; 

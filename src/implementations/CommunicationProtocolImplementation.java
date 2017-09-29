@@ -5,39 +5,38 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import interfaces.Communication.ICommunicationProtocol;
-import interfaces.Patterns.ICallback;
 import models.Message;
 
 public class CommunicationProtocolImplementation implements ICommunicationProtocol<Message> {
 	
 	private final Socket socket;
 	private ObjectOutputStream oos;
+	private ObjectInputStream ois;
 	
 	public CommunicationProtocolImplementation(Socket socket){
 		this.socket = socket;
-	}
-	
-	@Override
-	public void getResponse(ICallback<Message> callback) {
-		try(ObjectInputStream ois = new ObjectInputStream(socket.getInputStream())){
+		try {
 			oos = new ObjectOutputStream(socket.getOutputStream());
-			Message msg;
-			while((msg = (Message) ois.readObject()) != null){
-				callback.onCalledBack(msg);
-			}
+			ois = new ObjectInputStream(socket.getInputStream());
 		}catch(Exception e){
 			System.err.println(e.getMessage());
-		}finally {
-			try {
-				if (oos != null) oos.close();
-			}catch(Exception e){
-				System.err.println(e.getMessage());
-			}
 		}
 	}
 	
 	@Override
+	public Message getResponse() {
+		try {
+			return (Message) ois.readObject();
+		}catch(Exception e){
+			System.err.println(e.getMessage());
+		}
+		return null;
+	}
+	
+	@Override
 	public synchronized void sendResponse(Message message) {
+		if (oos == null || socket == null || socket.isClosed())
+			return;
 		try {
 			oos.writeObject(message);
 			oos.flush();
@@ -52,11 +51,22 @@ public class CommunicationProtocolImplementation implements ICommunicationProtoc
 		try {
 			if (oos != null)
 				oos.close();
+			if (ois != null)
+				ois.close();
 			if (socket != null)
 				socket.close();
 		}catch(Exception e){
 			System.err.println(e.getMessage());
 		}
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		// TODO Auto-generated method stub
+		super.finalize();
+		oos.close();
+		ois.close();
+		socket.close();
 	}
 	
 	

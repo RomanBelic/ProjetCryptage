@@ -9,7 +9,7 @@ import models.Upload;
 import threading.CommunicationThread;
 import threading.FileSaverThread;
 
-public class DispatcherImplementation implements IDispatcherService {
+public class DispatcherImplementation implements IDispatcherService<Message> {
 
 	private final FileSaverThread fileSaver;
 	private final List<CommunicationThread> lstClients;
@@ -20,9 +20,9 @@ public class DispatcherImplementation implements IDispatcherService {
 	}
 	
 	@Override
-	public void dispatchMessage(ICommunicationProtocol<Message> protocol, CommunicationThread sender, Message message) {
+	public void dispatchMessage(ICommunicationProtocol<Message> protocol, Message message) {
 		for(CommunicationThread receiver : lstClients){
-			receiver.getCommunicationProtocol().sendResponse(message);		
+			receiver.sendMessage(message);		
 		}	
 	}
 

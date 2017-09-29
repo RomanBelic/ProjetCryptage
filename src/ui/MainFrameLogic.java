@@ -12,6 +12,7 @@ import implementations.DispatcherImplementation;
 import implementations.FileDecryptorImplementation;
 import interfaces.Communication.IDispatcherService;
 import interfaces.Patterns.ICallback;
+import models.Message;
 import threading.CommunicationThread;
 import threading.FileSaverThread;
 import threading.ServerThread;
@@ -21,7 +22,7 @@ public class MainFrameLogic implements IMainFrame {
 	private final ICallback<String> onFileSavedCallBack;
 	private final List<CommunicationThread> lstClients;
 	private final FileDecryptorImplementation fileDecryptor;
-	private IDispatcherService dispatcherService;
+	private IDispatcherService<Message> dispatcherService;
 	private ServerThread serverThread;
 	private FileSaverThread fileSaverThread;
 	private final MainFrame ui;
@@ -41,7 +42,7 @@ public class MainFrameLogic implements IMainFrame {
 	
 	private void loadFilesToComboBox(JComboBox<ComboBoxItem> jcb){
 		File dir = new File("Uploads");
-		if (!dir.exists())
+		if (!dir.exists() || dir.listFiles() == null)
 			return;
 		
 		for(File f : dir.listFiles()){
@@ -66,6 +67,7 @@ public class MainFrameLogic implements IMainFrame {
 		serverThread.start();
 		fileSaverThread.start();
 		System.out.println("Server Started");
+		System.out.println("File saver Started");
 	}
 	
 	private void onSavedEncryptedFile(String filePath){
@@ -76,14 +78,15 @@ public class MainFrameLogic implements IMainFrame {
 
 	@Override
 	public void onBtnStopClick(ActionEvent e, JComponent sender) {
-		if (serverThread.getIsActive()){
-			serverThread.stopServer();
-			System.out.println("Server stopped");
-		}
-		if (fileSaverThread.getIsActive()){
-			fileSaverThread.stopSaver();
-			System.out.println("File saver stopped");
-		}
+		if (serverThread == null)
+			return;
+		serverThread.stopServer();
+		System.out.println("Server stopped");
+		
+		if (fileSaverThread == null)
+			return;
+		fileSaverThread.stopSaver();
+		System.out.println("File saver stopped");
 	}
 	
 	
