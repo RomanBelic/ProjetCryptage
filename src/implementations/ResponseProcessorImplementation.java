@@ -29,7 +29,6 @@ public class ResponseProcessorImplementation implements IResponseProcessor<Messa
 	@Override
 	public void processResponse (Message msg, IDispatcherService<Message> dispatcherService) {
 		long packets = msg.getPackets();
-		System.out.println("received");
 		if ((packets | Communication.F_AskChallenge) == Communication.F_AskChallenge){ 
 			//Ici envoyer code secret
 			String srvChallengeKey = hasher.generateSecretKeyString(10);
@@ -39,7 +38,7 @@ public class ResponseProcessorImplementation implements IResponseProcessor<Messa
 			msg.setCode(Communication.Accept);
 			commProtocol.sendResponse(msg);
 		}
-		else if ((packets |  Communication.F_AcceptChallenge) == Communication.F_AcceptChallenge){ 
+		else if ((packets | Communication.F_AcceptChallenge) == Communication.F_AcceptChallenge){ 
 			//Ici gerer login
 			String[] split = msg.getMessage().split(";");
 			String clSecretHash = split.length > 0 ? split[0] : null;
@@ -48,12 +47,11 @@ public class ResponseProcessorImplementation implements IResponseProcessor<Messa
 				String pass = split.length > 2 ?  split[2] : null;
 				client = clientService.getClient(login, pass);
 				msg.setCode((client != null) ? Communication.OK : Communication.No_Content);
-				msg.setPackets(Communication.F_PassedChallenge);
-				commProtocol.sendResponse(msg);
 			}else {
 				msg.setCode(Communication.Unauthorized);
-				commProtocol.sendResponse(msg);
 			}
+			msg.setPackets(Communication.F_PassedChallenge);
+			commProtocol.sendResponse(msg);
 		}
 		else if ((packets | Communication.F_PassedChallenge | Communication.F_SentMsg) == (Communication.F_PassedChallenge | Communication.F_SentMsg)){
 			//Ici gerer message text ou fichier

@@ -28,7 +28,7 @@ public class DispatcherImplementation implements IDispatcherService<Message> {
 
 	@Override
 	public void uploadFile(Upload upload) {
-		if (fileSaver.isAlive()){
+		if (fileSaver.isActive()){
 			fileSaver.appendToQueue(upload);
 		}
 	}
