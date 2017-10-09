@@ -7,7 +7,13 @@ public class Client {
 	
 	public Client(){
 		this.id = 0;
-		this.name = "";
+		this.name = new String();
+	}
+
+	public Client(int id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
 	}
 
 	public int getId() {
@@ -27,7 +33,7 @@ public class Client {
 	}
 	
 	public boolean isEmpty(){
-		return id > 0;
+		return id <= 0;
 	}
 	
 	@Override

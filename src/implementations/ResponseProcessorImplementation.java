@@ -42,14 +42,21 @@ public class ResponseProcessorImplementation implements IResponseProcessor<Messa
 			//Ici gerer login
 			String[] split = msg.getMessage().split(";");
 			String clSecretHash = split.length > 0 ? split[0] : null;
+			String response = null;
 			if (secretHash != null && secretHash.equals(clSecretHash)){
 				String login = split.length > 1 ?  split[1] : null;
 				String pass = split.length > 2 ?  split[2] : null;
 				client = clientService.getClient(login, pass);
-				msg.setCode((client != null) ? Communication.OK : Communication.No_Content);
+				if (client != null){
+					response = String.format("%s;%s", client.getId(), client.getName());
+					msg.setCode(Communication.OK);
+				}else {
+					msg.setCode(Communication.No_Content);
+				}
 			}else {
 				msg.setCode(Communication.Unauthorized);
 			}
+			msg.setMessage(response);
 			msg.setPackets(Communication.F_PassedChallenge);
 			commProtocol.sendResponse(msg);
 		}

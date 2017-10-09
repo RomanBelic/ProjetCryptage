@@ -43,7 +43,7 @@ public class FileDecryptorImplementation implements IDelegate<Void, String> {
 		filePath = filePath.replace(".encrypted", "");
 		int subFrom = filePath.lastIndexOf(File.separatorChar) > - 1 ? filePath.lastIndexOf(File.separatorChar) + 1 : 0;
 		filePath = filePath.substring(subFrom, filePath.length());
-		try (FileOutputStream fos = new FileOutputStream(dir.concat("/").concat(filePath), false)){
+		try (FileOutputStream fos = new FileOutputStream(dir.concat(File.separator).concat(filePath), false)){
 			fos.write(data);
 		}catch (Exception e) {
 			System.err.println(e.getMessage());
