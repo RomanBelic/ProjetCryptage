@@ -10,6 +10,6 @@ public class Run {
 		EventQueue.invokeLater(() -> {
 			//TODO Auto-generated method stub
 			new MainFrame();
-		});		
+		});
 	}														  
 }
