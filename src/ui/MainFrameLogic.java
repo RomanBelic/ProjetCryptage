@@ -43,7 +43,7 @@ public class MainFrameLogic implements IMainFrame {
 	
 	private void loadFilesToComboBox(JComboBox<ComboBoxItem> jcb){
 		File dir = new File("Uploads");
-		if (!dir.exists() || dir.listFiles() == null)
+		if (dir.listFiles() == null || !dir.exists())
 			return;
 		
 		for(File f : dir.listFiles()){
