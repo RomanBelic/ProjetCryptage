@@ -1,0 +1,47 @@
+Add-in Express Registrator Log File: 02/25/2017 16:28:57
+
+Installation directory: D:\WinZip\
+Registrator version: 8.2.4371.0
+Operating System: Microsoft Windows 10 (build 14393), 64-bit
+Process Owner: Administrator
+Command Line: "D:\WinZip\adxregistrator.exe" /uninstall="D:\WinZip\WinZipExpressForOffice.dll" /privileges=user
+Run 'As Administrator': No
+Process Elevated: No
+Integrity Level: Medium
+UAC (User Account Control): On
+--------------------------------------------------------------
+16:28:57 0424 Starting the add-in unregistration process.
+16:28:57 0424 Loading mscoree.dll
+16:28:57 0424 Success.
+16:28:57 0424 .NET Framework installation directory: 
+16:28:57 0424 The latest version of .NET Framework: 'v4.0.30319'
+16:28:57 0424 Loading CLR: v4.0.30319.
+16:28:57 0424 Calling CLRCreateInstance method.
+16:28:57 0424 Success.
+16:28:57 0424 Calling GetRuntime method.
+16:28:57 0424 Success.
+16:28:57 0424 Checking if the hosting API of .NET Framework v4.0 beta is installed.
+16:28:57 0424 The hosting API is up to date.
+16:28:57 0424 Calling GetInterface method for the CorRuntimeHost interface.
+16:28:57 0424 Success.
+16:28:57 0424 Starting CLR...
+16:28:57 0424 Success.
+16:28:57 0424 Getting the CLR version.
+16:28:57 0424 The CLR v4.0.30319 has been initialized successfully.
+16:28:57 0424 Creating a new domain setup.
+16:28:57 0424 Success.
+16:28:57 0424 The 'shadow copy' is disabled.
+16:28:57 0424 Creating a new application domain.
+16:28:57 0424 Success.
+16:28:57 0424 Getting the base directory for the domain.
+16:28:57 0424 Success. The directory is 'D:\WinZip\'.
+16:28:57 0424 Searching for the Add-in Express core library.
+16:28:57 0424 Success. The 'AddinExpress.MSO.2005.dll' file is found.
+16:28:57 0424 Creating an instance of the 'AddinExpress.Deployment.ADXRegistrator' class.
+16:28:57 0424 Assembly identity is 'AddinExpress.MSO.2005'.
+16:28:57 0424 Success.
+16:28:57 0424 Unwrapping the instance of the 'AddinExpress.Deployment.ADXRegistrator' class.
+16:28:57 0424 Success.
+16:28:57 0424 Calling the managed unregistration procedure (DISPID = 1610743823).
+16:28:57 0424 Success.
+16:28:57 0424 The add-in unregistration process is completed with HRESULT = 0.

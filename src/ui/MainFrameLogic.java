@@ -16,6 +16,7 @@ import models.Message;
 import threading.CommunicationThread;
 import threading.FileSaverThread;
 import threading.ServerThread;
+import utils.Utils;
 
 public class MainFrameLogic implements IMainFrame {
 
@@ -42,7 +43,7 @@ public class MainFrameLogic implements IMainFrame {
 	
 	private void loadFilesToComboBox(JComboBox<ComboBoxItem> jcb){
 		File dir = new File("Uploads");
-		if (!dir.exists() || dir.listFiles() == null)
+		if (dir.listFiles() == null || !dir.exists())
 			return;
 		
 		for(File f : dir.listFiles()){
@@ -71,8 +72,7 @@ public class MainFrameLogic implements IMainFrame {
 	}
 	
 	private void onSavedEncryptedFile(String filePath){
-		int subFrom = filePath.lastIndexOf(File.separatorChar) > - 1 ? filePath.lastIndexOf(File.separatorChar) + 1 : 0;
-		String fileName = filePath.substring(subFrom, filePath.length());
+		String fileName = Utils.resolveFileName(filePath);
 		ui.fileBox.addItem(new ComboBoxItem(fileName, filePath));
 	}
 

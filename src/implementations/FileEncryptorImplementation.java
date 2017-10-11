@@ -25,7 +25,7 @@ public class FileEncryptorImplementation implements IDelegate<String, Upload> {
 	
 	@Override
 	public String action(Upload upload) {
-		String filepath = dirName.concat("/").concat(upload.getName()).concat(upload.getExtension()).concat(".encrypted");
+		String filepath = dirName.concat(File.separator).concat(upload.getName()).concat(".encrypted");
 		byte[] eData = fileCipher.encrypt(upload.getData());
 		try (FileOutputStream fs = new FileOutputStream(filepath)){
 			fs.write(eData);

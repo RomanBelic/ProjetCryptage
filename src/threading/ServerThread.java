@@ -57,7 +57,7 @@ public class ServerThread extends Thread implements Runnable, ICallback<Communic
 				e.printStackTrace();
 			}
 		}
-		isActive.set(false);
+		stopServer();
 	}
 	
 	@Override
@@ -69,13 +69,9 @@ public class ServerThread extends Thread implements Runnable, ICallback<Communic
 	protected void finalize() throws Throwable {
 		super.finalize();
 		servSocket.close();
-		for (CommunicationThread commThread : lstClients){
-			commThread.closeSocket();
-		}
-		lstClients.clear();
 	}
 	
-	public synchronized void stopServer(){
+	public void stopServer(){
 		if (!isActive.get())
 			return;
 		isActive.set(false);

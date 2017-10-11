@@ -22,6 +22,10 @@ public class FileSaverThread extends Thread implements Runnable {
 		this.callBack = callBack;
 	}
 	
+	public boolean isActive(){
+		return isActive.get();
+	}
+	
 	@Override
 	public synchronized void start() {
 		if (isActive.get())
@@ -70,7 +74,4 @@ public class FileSaverThread extends Thread implements Runnable {
 		vect.clear();
 		this.notify();
 	}
-	
-	
-
 }
